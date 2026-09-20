@@ -1,0 +1,58 @@
+<div class="page-header">
+  <h2>{{ i18n.t('reports') }}</h2>
+</div>
+
+@if (loading()) {
+  <div class="empty-state"><span class="spinner"></span></div>
+} @else if (errorMessage()) {
+  <div class="alert alert-error">{{ errorMessage() }}</div>
+} @else if (report()) {
+  <div class="summary-card card">
+    <span class="summary-label">{{ i18n.t('totalCompanies') }}</span>
+    <span class="summary-value">{{ report()!.totalCompanies }}</span>
+  </div>
+
+  <div class="report-grid">
+    <div class="card report-card">
+      <h3>{{ i18n.t('bySector') }}</h3>
+      @if (report()!.bySector.length === 0) {
+        <div class="empty-state">{{ i18n.t('noResults') }}</div>
+      } @else {
+        <div class="bar-list">
+          @for (s of report()!.bySector; track s.sectorNameEn) {
+            <div class="bar-row">
+              <div class="bar-label">
+                <span>{{ i18n.pick(s.sectorNameEn, s.sectorNameAr) }}</span>
+                <span class="bar-count">{{ s.companyCount }} ({{ s.percentageOfTotal }}%)</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" [style.width.%]="s.percentageOfTotal"></div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="card report-card">
+      <h3>{{ i18n.t('bySize') }}</h3>
+      @if (report()!.bySize.length === 0) {
+        <div class="empty-state">{{ i18n.t('noResults') }}</div>
+      } @else {
+        <div class="bar-list">
+          @for (s of report()!.bySize; track s.size) {
+            <div class="bar-row">
+              <div class="bar-label">
+                <span>{{ sizeLabel(s.size) }}</span>
+                <span class="bar-count">{{ s.companyCount }} ({{ s.percentageOfTotal }}%)</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill bar-fill-alt" [style.width.%]="s.percentageOfTotal"></div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}

@@ -1,0 +1,52 @@
+<div class="login-page">
+  <div class="lang-switch">
+    <button type="button" (click)="i18n.setLang('en')" [class.active]="i18n.lang() === 'en'">EN</button>
+    <button type="button" (click)="i18n.setLang('ar')" [class.active]="i18n.lang() === 'ar'">AR</button>
+  </div>
+
+  <div class="login-card card">
+    <div class="brand">
+      <div class="brand-mark">N</div>
+      <h1>{{ i18n.t('appTitle') }}</h1>
+    </div>
+
+    <div class="role-tabs">
+      <button type="button" [class.active]="role() === 'admin'" (click)="setRole('admin')">
+        {{ i18n.t('admin') }}
+      </button>
+      <button type="button" [class.active]="role() === 'company'" (click)="setRole('company')">
+        {{ i18n.t('company') }}
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="username">{{ i18n.t('username') }}</label>
+        <input id="username" type="text" formControlName="username" autocomplete="username" />
+        @if (form.controls.username.invalid && form.controls.username.touched) {
+          <span class="error">{{ i18n.t('requiredField') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">{{ i18n.t('password') }}</label>
+        <input id="password" type="password" formControlName="password" autocomplete="current-password" />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <span class="error">{{ i18n.t('requiredField') }}</span>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <div class="alert alert-error">{{ errorMessage() }}</div>
+      }
+
+      <button type="submit" class="btn btn-primary submit-btn" [disabled]="loading()">
+        @if (loading()) {
+          <span class="spinner"></span>
+        } @else {
+          {{ roleLabel() }}
+        }
+      </button>
+    </form>
+  </div>
+</div>

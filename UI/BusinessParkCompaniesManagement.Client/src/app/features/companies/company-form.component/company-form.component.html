@@ -1,0 +1,114 @@
+<div class="page-header">
+  <h2>{{ isEdit ? i18n.t('editCompany') : i18n.t('newCompany') }}</h2>
+  <a routerLink="/admin/companies" class="btn btn-secondary">{{ i18n.t('back') }}</a>
+</div>
+
+@if (loading()) {
+  <div class="empty-state"><span class="spinner"></span></div>
+} @else {
+  <form [formGroup]="form" (ngSubmit)="submit()" class="card form-card">
+    @if (errorMessage()) {
+      <div class="alert alert-error">{{ errorMessage() }}</div>
+    }
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="nameEn">{{ i18n.t('nameEn') }}</label>
+        <input id="nameEn" type="text" formControlName="nameEn" />
+        @if (form.controls.nameEn.invalid && form.controls.nameEn.touched) {
+          <span class="error">{{ i18n.t('requiredField') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="nameAr">{{ i18n.t('nameAr') }}</label>
+        <input id="nameAr" type="text" formControlName="nameAr" dir="rtl" />
+        @if (form.controls.nameAr.invalid && form.controls.nameAr.touched) {
+          <span class="error">{{ i18n.t('requiredField') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="sectorId">{{ i18n.t('sector') }}</label>
+        <select id="sectorId" formControlName="sectorId">
+          <option [ngValue]="null" disabled>—</option>
+          @for (sector of sectors(); track sector.id) {
+            <option [ngValue]="sector.id">{{ i18n.pick(sector.nameEn, sector.nameAr) }}</option>
+          }
+        </select>
+        @if (form.controls.sectorId.invalid && form.controls.sectorId.touched) {
+          <span class="error">{{ i18n.t('requiredField') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="size">{{ i18n.t('size') }}</label>
+        <select id="size" formControlName="size">
+          <option value="Small">{{ i18n.t('small') }}</option>
+          <option value="Medium">{{ i18n.t('medium') }}</option>
+          <option value="Large">{{ i18n.t('large') }}</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="employeeCount">{{ i18n.t('employeeCount') }}</label>
+        <input id="employeeCount" type="number" min="0" formControlName="employeeCount" />
+      </div>
+
+      <div class="field">
+        <label for="email">{{ i18n.t('email') }}</label>
+        <input id="email" type="email" formControlName="email" />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <span class="error">{{ i18n.t('invalidEmail') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="phone">{{ i18n.t('phone') }}</label>
+        <input id="phone" type="text" formControlName="phone" />
+      </div>
+
+      <div class="field">
+        <label for="buildingNumber">{{ i18n.t('buildingNumber') }}</label>
+        <input id="buildingNumber" type="text" formControlName="buildingNumber" />
+      </div>
+
+      <div class="field">
+        <label for="floorNumber">{{ i18n.t('floorNumber') }}</label>
+        <input id="floorNumber" type="text" formControlName="floorNumber" />
+      </div>
+
+      <div class="field full-width">
+        <label for="address">{{ i18n.t('address') }}</label>
+        <input id="address" type="text" formControlName="address" />
+      </div>
+
+      <div class="field">
+        <label for="username">{{ i18n.t('username') }}</label>
+        <input id="username" type="text" formControlName="username" autocomplete="off" />
+        @if (form.controls.username.invalid && form.controls.username.touched) {
+          <span class="error">{{ i18n.t('requiredField') }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">{{ isEdit ? i18n.t('passwordOptional') : i18n.t('passwordRequired') }}</label>
+        <input id="password" type="password" formControlName="password" autocomplete="new-password" />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <span class="error">{{ i18n.t('requiredField') }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="saving()">
+        @if (saving()) {
+          <span class="spinner"></span>
+        } @else {
+          {{ i18n.t('save') }}
+        }
+      </button>
+      <a routerLink="/admin/companies" class="btn btn-secondary">{{ i18n.t('cancel') }}</a>
+    </div>
+  </form>
+}

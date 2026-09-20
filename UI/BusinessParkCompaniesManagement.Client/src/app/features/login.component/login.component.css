@@ -1,0 +1,97 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #1f3864 0%, #2c4e8c 45%, #4c6fb0 100%);
+  position: relative;
+  padding: 1.5rem;
+}
+
+.lang-switch {
+  position: absolute;
+  top: 1.25rem;
+  inset-inline-end: 1.25rem;
+  display: flex;
+  gap: 0.25rem;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 0.25rem;
+}
+
+.lang-switch button {
+  border: none;
+  background: transparent;
+  color: #fff;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12.5px;
+}
+
+.lang-switch button.active {
+  background: #fff;
+  color: var(--color-primary);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 2.25rem 2rem;
+  background: #fff;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.brand-mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 22px;
+  margin-bottom: 0.75rem;
+}
+
+.brand h1 {
+  font-size: 18px;
+  color: var(--color-primary);
+}
+
+.role-tabs {
+  display: flex;
+  background: var(--color-bg);
+  border-radius: 999px;
+  padding: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.role-tabs button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.55rem 0;
+  border-radius: 999px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.role-tabs button.active {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 0.25rem;
+}

@@ -1,0 +1,38 @@
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">N</div>
+      <span>{{ i18n.t('appTitle') }}</span>
+    </div>
+
+    <nav>
+      @if (auth.isAdmin()) {
+        <a routerLink="/admin/companies" routerLinkActive="active">{{ i18n.t('companies') }}</a>
+        <a routerLink="/admin/complaints" routerLinkActive="active">{{ i18n.t('complaints') }}</a>
+        <a routerLink="/admin/reports" routerLinkActive="active">{{ i18n.t('reports') }}</a>
+      }
+      @if (auth.isCompany()) {
+        <a routerLink="/company/complaints" routerLinkActive="active">{{ i18n.t('myComplaints') }}</a>
+        <a routerLink="/company/complaints/new" routerLinkActive="active">{{ i18n.t('newComplaint') }}</a>
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="lang-switch">
+        <button type="button" (click)="i18n.setLang('en')" [class.active]="i18n.lang() === 'en'">EN</button>
+        <button type="button" (click)="i18n.setLang('ar')" [class.active]="i18n.lang() === 'ar'">AR</button>
+      </div>
+      <div class="user-info">
+        <span class="user-name">{{ auth.currentUser()?.displayName }}</span>
+        <span class="user-role">{{ auth.isAdmin() ? i18n.t('admin') : i18n.t('company') }}</span>
+      </div>
+      <button type="button" class="btn btn-secondary logout-btn" (click)="logout()">
+        {{ i18n.t('logout') }}
+      </button>
+    </div>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

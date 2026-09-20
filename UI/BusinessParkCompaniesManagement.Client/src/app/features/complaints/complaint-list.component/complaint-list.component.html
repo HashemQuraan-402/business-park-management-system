@@ -1,0 +1,100 @@
+<div class="page-header">
+  <h2>{{ auth.isAdmin() ? i18n.t('incomingComplaints') : i18n.t('myComplaints') }}</h2>
+  @if (auth.isCompany()) {
+    <a routerLink="/company/complaints/new" class="btn btn-primary">{{ i18n.t('newComplaint') }}</a>
+  }
+</div>
+
+<div class="filters card">
+  <select [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()">
+    <option value="">{{ i18n.t('allStatuses') }}</option>
+    @for (s of statuses; track s) {
+      <option [value]="s">{{ statusLabel(s) }}</option>
+    }
+  </select>
+</div>
+
+@if (errorMessage()) {
+  <div class="alert alert-error">{{ errorMessage() }}</div>
+}
+@if (actionError()) {
+  <div class="alert alert-error">{{ actionError() }}</div>
+}
+@if (auth.isCompany()) {
+  <p class="hint">{{ i18n.t('deleteNote') }}</p>
+}
+
+<div class="card table-card">
+  @if (loading()) {
+    <div class="empty-state"><span class="spinner"></span></div>
+  } @else if (complaints().length === 0) {
+    <div class="empty-state">{{ i18n.t('noResults') }}</div>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          @if (auth.isAdmin()) {
+            <th>{{ i18n.t('submittedBy') }}</th>
+          }
+          <th>{{ i18n.t('complaintType') }}</th>
+          <th>{{ i18n.t('description') }}</th>
+          <th>{{ i18n.t('priority') }}</th>
+          <th>{{ i18n.t('status') }}</th>
+          <th>{{ i18n.t('createdAt') }}</th>
+          <th>{{ i18n.t('actions') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of complaints(); track c.id) {
+          <tr>
+            @if (auth.isAdmin()) {
+              <td>{{ i18n.pick(c.companyNameEn, c.companyNameAr) }}</td>
+            }
+            <td>{{ i18n.pick(c.complaintTypeNameEn, c.complaintTypeNameAr) }}</td>
+            <td class="description-cell">{{ c.description }}</td>
+            <td>{{ c.priority }}</td>
+            <td>
+              @if (auth.isAdmin()) {
+                <select
+                  class="status-select"
+                  [ngModel]="c.status"
+                  (ngModelChange)="updateStatus(c, $event)"
+                  [disabled]="updatingId() === c.id"
+                >
+                  @for (s of statuses; track s) {
+                    <option [value]="s">{{ statusLabel(s) }}</option>
+                  }
+                </select>
+              } @else {
+                <span class="badge" [class]="statusBadgeClass(c.status)">{{ statusLabel(c.status) }}</span>
+              }
+            </td>
+            <td>{{ c.createdAt | date: 'short' }}</td>
+            <td>
+              @if (canDelete(c)) {
+                <button type="button" class="btn btn-danger btn-sm" (click)="deleteComplaint(c)">
+                  {{ i18n.t('delete') }}
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <button type="button" class="btn btn-secondary btn-sm" (click)="goToPage(-1)" [disabled]="page() === 1">
+        {{ i18n.t('previous') }}
+      </button>
+      <span>{{ i18n.t('page') }} {{ page() }} {{ i18n.t('of') }} {{ totalPages }}</span>
+      <button
+        type="button"
+        class="btn btn-secondary btn-sm"
+        (click)="goToPage(1)"
+        [disabled]="page() === totalPages"
+      >
+        {{ i18n.t('next') }}
+      </button>
+    </div>
+  }
+</div>

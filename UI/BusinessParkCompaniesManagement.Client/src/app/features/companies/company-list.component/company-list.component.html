@@ -1,0 +1,103 @@
+<div class="page-header">
+  <h2>{{ i18n.t('companies') }}</h2>
+  <div class="header-actions">
+    <button type="button" class="btn btn-secondary" (click)="exportExcel()" [disabled]="exporting()">
+      @if (exporting()) {
+        <span class="spinner"></span>
+      } @else {
+        {{ i18n.t('exportExcel') }}
+      }
+    </button>
+    <a routerLink="/admin/companies/new" class="btn btn-primary">{{ i18n.t('newCompany') }}</a>
+  </div>
+</div>
+
+<div class="filters card">
+  <input
+    type="text"
+    class="search-input"
+    [placeholder]="i18n.t('search')"
+    [(ngModel)]="search"
+    (ngModelChange)="onSearchChange()"
+  />
+
+  <select [(ngModel)]="sectorId" (ngModelChange)="onFilterChange()">
+    <option [ngValue]="null">{{ i18n.t('allSectors') }}</option>
+    @for (sector of sectors(); track sector.id) {
+      <option [ngValue]="sector.id">{{ i18n.pick(sector.nameEn, sector.nameAr) }}</option>
+    }
+  </select>
+
+  <select [(ngModel)]="size" (ngModelChange)="onFilterChange()">
+    <option value="">{{ i18n.t('allSizes') }}</option>
+    <option value="Small">{{ i18n.t('small') }}</option>
+    <option value="Medium">{{ i18n.t('medium') }}</option>
+    <option value="Large">{{ i18n.t('large') }}</option>
+  </select>
+</div>
+
+@if (errorMessage()) {
+  <div class="alert alert-error">{{ errorMessage() }}</div>
+}
+@if (deleteError()) {
+  <div class="alert alert-error">{{ deleteError() }}</div>
+}
+
+<div class="card table-card">
+  @if (loading()) {
+    <div class="empty-state"><span class="spinner"></span></div>
+  } @else if (companies().length === 0) {
+    <div class="empty-state">{{ i18n.t('noResults') }}</div>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>{{ i18n.t('nameEn') }} / {{ i18n.t('nameAr') }}</th>
+          <th>{{ i18n.t('sector') }}</th>
+          <th>{{ i18n.t('size') }}</th>
+          <th>{{ i18n.t('employeeCount') }}</th>
+          <th>{{ i18n.t('email') }}</th>
+          <th>{{ i18n.t('phone') }}</th>
+          <th>{{ i18n.t('actions') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of companies(); track c.id) {
+          <tr>
+            <td>
+              <div class="company-name">{{ i18n.pick(c.nameEn, c.nameAr) }}</div>
+            </td>
+            <td>{{ i18n.pick(c.sectorNameEn, c.sectorNameAr) }}</td>
+            <td>{{ sizeLabel(c.size) }}</td>
+            <td>{{ c.employeeCount }}</td>
+            <td>{{ c.email || '-' }}</td>
+            <td>{{ c.phone || '-' }}</td>
+            <td class="row-actions">
+              <a [routerLink]="['/admin/companies', c.id, 'edit']" class="btn btn-secondary btn-sm">
+                {{ i18n.t('edit') }}
+              </a>
+              <button type="button" class="btn btn-danger btn-sm" (click)="deleteCompany(c)">
+                {{ i18n.t('delete') }}
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <button type="button" class="btn btn-secondary btn-sm" (click)="goToPage(-1)" [disabled]="page() === 1">
+        {{ i18n.t('previous') }}
+      </button>
+      <span>{{ i18n.t('page') }} {{ page() }} {{ i18n.t('of') }} {{ totalPages }}</span>
+      <button
+        type="button"
+        class="btn btn-secondary btn-sm"
+        (click)="goToPage(1)"
+        [disabled]="page() === totalPages"
+      >
+        {{ i18n.t('next') }}
+      </button>
+    </div>
+  }
+</div>

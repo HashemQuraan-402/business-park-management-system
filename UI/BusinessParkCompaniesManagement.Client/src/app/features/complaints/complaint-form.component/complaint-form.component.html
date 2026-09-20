@@ -1,0 +1,55 @@
+<div class="page-header">
+  <h2>{{ i18n.t('newComplaint') }}</h2>
+  <a routerLink="/company/complaints" class="btn btn-secondary">{{ i18n.t('back') }}</a>
+</div>
+
+@if (loading()) {
+  <div class="empty-state"><span class="spinner"></span></div>
+} @else {
+  <form [formGroup]="form" (ngSubmit)="submit()" class="card form-card">
+    @if (errorMessage()) {
+      <div class="alert alert-error">{{ errorMessage() }}</div>
+    }
+
+    <div class="field">
+      <label for="complaintTypeId">{{ i18n.t('complaintType') }}</label>
+      <select id="complaintTypeId" formControlName="complaintTypeId">
+        <option [ngValue]="null" disabled>—</option>
+        @for (type of complaintTypes(); track type.id) {
+          <option [ngValue]="type.id">{{ i18n.pick(type.nameEn, type.nameAr) }}</option>
+        }
+      </select>
+      @if (form.controls.complaintTypeId.invalid && form.controls.complaintTypeId.touched) {
+        <span class="error">{{ i18n.t('requiredField') }}</span>
+      }
+    </div>
+
+    <div class="field">
+      <label for="priority">{{ i18n.t('priority') }}</label>
+      <select id="priority" formControlName="priority">
+        <option value="Low">{{ i18n.t('low') }}</option>
+        <option value="Medium">{{ i18n.t('medium') }}</option>
+        <option value="High">{{ i18n.t('high') }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="description">{{ i18n.t('description') }}</label>
+      <textarea id="description" rows="6" formControlName="description"></textarea>
+      @if (form.controls.description.invalid && form.controls.description.touched) {
+        <span class="error">{{ i18n.t('requiredField') }}</span>
+      }
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="saving()">
+        @if (saving()) {
+          <span class="spinner"></span>
+        } @else {
+          {{ i18n.t('submit') }}
+        }
+      </button>
+      <a routerLink="/company/complaints" class="btn btn-secondary">{{ i18n.t('cancel') }}</a>
+    </div>
+  </form>
+}

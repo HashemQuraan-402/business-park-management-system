@@ -1,0 +1,17 @@
+@BusinessParkCompaniesManagement.Server_HostAddress = http://localhost:5145
+
+### Sign in as a seeded administrator
+POST {{BusinessParkCompaniesManagement.Server_HostAddress}}/api/auth/login/admin
+Content-Type: application/json
+
+{
+  "username": "admin1",
+  "password": "<your SeedAdmin password>"
+}
+
+### List companies (replace the token first)
+GET {{BusinessParkCompaniesManagement.Server_HostAddress}}/api/companies
+Accept: application/json
+Authorization: Bearer <token>
+
+###
